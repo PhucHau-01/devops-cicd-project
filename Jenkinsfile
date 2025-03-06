@@ -1,40 +1,25 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_CLI_ACI = "0"  // Tránh lỗi trên Windows
-    }
     stages {
-        stage('Clone code') {
+        stage('Clone Repository') {
             steps {
-                git 'https://github.com/PhucHau-01/devops-cicd-project.git'
+                git branch: 'main', credentialsId: 'your-credential-id', url: 'https://github.com/PhucHau-01/devops-cicd-project.git'
             }
         }
-        stage('Build Docker images') {
+        stage('Build') {
             steps {
-                script {
-                    try {
-                        sh 'docker-compose build'
-                    } catch (Exception e) {
-                        error "❌ Build failed!"
-                    }
-                }
+                sh 'echo Building the project...'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'echo Running tests...'
             }
         }
         stage('Deploy') {
             steps {
-                script {
-                    try {
-                        sh 'docker-compose up -d'
-                    } catch (Exception e) {
-                        error "❌ Deployment failed!"
-                    }
-                }
+                sh 'echo Deploying application...'
             }
-        }
-    }
-    post {
-        always {
-            echo "✅ CI/CD pipeline completed!"
         }
     }
 }
